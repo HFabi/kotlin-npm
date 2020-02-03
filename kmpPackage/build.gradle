@@ -1,0 +1,59 @@
+plugins {
+    id 'org.jetbrains.kotlin.js' version '1.3.61'
+
+    // Plugin for executing node scripts when node is not installed
+    // id "com.github.node-gradle.node" version "2.2.1"
+}
+
+group 'org.example'
+version '1.0.0'
+
+def main = "index"
+def kotlin_version = '1.3.61'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-js"
+    //testImplementation "org.jetbrains.kotlin:kotlin-test-js"
+}
+
+kotlin {
+    target.nodejs {}
+}
+
+compileKotlinJs {
+    // node module format
+    kotlinOptions.moduleKind = 'commonjs'
+    kotlinOptions.outputFile = "$project.buildDir.path/js/packages/${project.name}/lib/${main}.js"
+}
+
+compileTestKotlinJs {
+
+}
+
+tasks.register("overridePackageJson") {
+    doLast {
+        delete "$buildDir/js/packages/${project.name}/package.json"
+        new File("$buildDir/js/packages/${project.name}", "package.json").text =
+"""{
+  "main": "kotlin/kmppackage.js",
+  "devDependencies": {},
+  "dependencies": {
+    "kotlin": "$kotlin_version"
+  },
+  "peerDependencies": {},
+  "optionalDependencies": {},
+  "bundledDependencies": [],
+  "name": "${project.name}",
+  "version": "$version"
+}
+"""
+    }
+}
+packageJson.finalizedBy(tasks.getByName("overridePackageJson"))
+// output is two files:
+// kotlin.js: runtime and standard library
+// module.js: the actual code. all files are compiled into a single JavaScript file
