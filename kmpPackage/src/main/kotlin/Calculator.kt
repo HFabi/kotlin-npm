@@ -11,13 +11,12 @@ class Calculator {
     @JsName("subtract")
     fun subtract(a: Int, b: Int) = a - b
 
+    @JsName("multiply")
     fun multiply(a: Int, b: Int) = a * b
 
+    @JsName("divide")
     fun divide(a: Int, b: Int) = a / b
 
-    private fun helper() {
-        // empty
-    }
 }
 
 

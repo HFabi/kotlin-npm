@@ -28,6 +28,11 @@ compileKotlinJs {
     // node module format
     kotlinOptions.moduleKind = 'commonjs'
     kotlinOptions.outputFile = "$project.buildDir.path/js/packages/${project.name}/lib/${main}.js"
+
+    // debugging
+    kotlinOptions.sourceMap = true
+    kotlinOptions.sourceMapEmbedSources = "always"
+
 }
 
 compileTestKotlinJs {
@@ -39,7 +44,7 @@ tasks.register("overridePackageJson") {
         delete "$buildDir/js/packages/${project.name}/package.json"
         new File("$buildDir/js/packages/${project.name}", "package.json").text =
 """{
-  "main": "kotlin/kmppackage.js",
+  "main": "lib/index.js",
   "devDependencies": {},
   "dependencies": {
     "kotlin": "$kotlin_version"

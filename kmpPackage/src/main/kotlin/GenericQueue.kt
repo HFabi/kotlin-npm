@@ -1,4 +1,4 @@
-class Queue<T>(val name: String) {
+class GenericQueue<T>(val name: String) {
 
     private var elements: MutableList<T> = mutableListOf()
 
